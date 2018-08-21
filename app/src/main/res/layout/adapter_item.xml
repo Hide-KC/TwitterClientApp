@@ -25,8 +25,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="TextView"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="user_name"
         android:textSize="18sp"
+
         app:layout_constraintBottom_toTopOf="@+id/screen_name"
         app:layout_constraintEnd_toStartOf="@+id/circle_space"
         app:layout_constraintStart_toEndOf="@+id/profile_icon"
@@ -39,7 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="TextView"
+        android:text="screen_name"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/circle_space"
         app:layout_constraintStart_toEndOf="@+id/profile_icon"
@@ -52,9 +57,10 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="circle_space"
         android:textAlignment="viewEnd"
         app:layout_constraintBottom_toBottomOf="@+id/profile_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/profile_icon" />
+
 </android.support.constraint.ConstraintLayout>

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TwitterClientApp</string>
     <string name="profile_url">"twitter://user?screen_name="</string>
+    <string name="update">更新</string>
 </resources>

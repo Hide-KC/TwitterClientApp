@@ -33,9 +33,7 @@ class ParticipantsAdapter(context: Context): ArrayAdapter<UserDTO>(context, andr
                 it.context.startActivity(intent)
             } catch (ex: ActivityNotFoundException){
                 ex.printStackTrace()
-                Toast.makeText(context, "ユーザが見つかりません", Toast.LENGTH_SHORT).show()
             }
-
         }
 
         Glide.with(context).load(item.icon_url).into(holder.icon)
