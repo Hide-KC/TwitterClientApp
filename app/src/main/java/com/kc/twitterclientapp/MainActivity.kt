@@ -1,32 +1,78 @@
 package com.kc.twitterclientapp
 
+import android.app.Activity
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel {
+    private enum class FragmentTag{
+        PARTICIPANTS, PROGRESS
+    }
+    private var rootJob: Job? = null
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ConfirmOAuthActivity.REQUEST_CODE && resultCode == Activity.RESULT_CANCELED){
+            //CANCELEだった場合、終了
+            finish()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        rootJob = Job()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        rootJob?.cancel()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val testList = listOf(
-                "KC@技術書典5え06",
-                "test@技術書典(あ01)",
-                "技術書典A11",
-                "技術書展あ01",
-                "技術書典５",
-                "技術書典５A01"
-        )
-
-        val builder = StringBuilder()
-        for (testcase in testList){
-            val space = StringMatcher.getCircleSpace(testcase)
-            if (space != ""){
-                builder.append(space).append("\n")
-            }
+        if (TwitterUtils.loadAccessToken(this) == null){
+            val intent = Intent(this, ConfirmOAuthActivity::class.java)
+            startActivityForResult(intent, ConfirmOAuthActivity.REQUEST_CODE)
         }
 
-        spaces.text = builder.toString()
+        toolbar.inflateMenu(R.menu.menu_main)
+        toolbar.setOnMenuItemClickListener {
+            val id = it.itemId
+            if (id == R.id.update_follows){
+                val job = TwitterLinkJob(this) //臭うコード
+
+                //キャンセル付きダイアログ表示
+                val dialog = ProgressDialogFragment.newInstance()
+                dialog.show(supportFragmentManager, FragmentTag.PROGRESS.name)
+
+                //フォロー一覧を取得
+                launch(UI, parent = rootJob) {
+                    val follows = async { job.getFollow() }.await()
+                    val fragment = supportFragmentManager
+                            .findFragmentByTag(FragmentTag.PARTICIPANTS.name)
+                    if (fragment is ParticipantsFragment){
+                        fragment.setAdapter(follows)
+                    }
+                }
+            }
+            return@setOnMenuItemClickListener true
+        }
+
+        //参加者リストFragmentのセット
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.participant_frame, ParticipantsFragment.newInstance(null))
+        transaction.commit()
+    }
+
+    override fun cancel(){
+        rootJob?.cancel()
     }
 }

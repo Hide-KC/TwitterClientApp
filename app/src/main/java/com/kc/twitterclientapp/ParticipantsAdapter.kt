@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 
 class ParticipantsAdapter(context: Context): ArrayAdapter<UserDTO>(context, android.R.layout.simple_list_item_1) {

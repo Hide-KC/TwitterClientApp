@@ -2,4 +2,6 @@
     <string name="app_name">TwitterClientApp</string>
     <string name="profile_url">"twitter://user?screen_name="</string>
     <string name="update">更新</string>
+    <string name="accesstoken_success">認証成功</string>
+    <string name="accesstoken_error">認証失敗</string>
 </resources>
