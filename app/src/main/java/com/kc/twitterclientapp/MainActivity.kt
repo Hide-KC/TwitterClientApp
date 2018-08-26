@@ -10,11 +10,18 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 
-class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel {
+class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterLinkTask.UIUpdateListener {
     private enum class FragmentTag{
         PARTICIPANTS, PROGRESS
     }
     private var rootJob: Job? = null
+
+    override fun update(count: Int) {
+        val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.PROGRESS.name)
+        if (fragment is ProgressDialogFragment){
+            fragment.setCount(count)
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -47,21 +54,20 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel {
         toolbar.setOnMenuItemClickListener {
             val id = it.itemId
             if (id == R.id.update_follows){
-                val job = TwitterLinkJob(this) //臭うコード
+                val task = TwitterLinkTask(this, rootJob) //臭うコード
 
                 //キャンセル付きダイアログ表示
                 val dialog = ProgressDialogFragment.newInstance()
                 dialog.show(supportFragmentManager, FragmentTag.PROGRESS.name)
 
                 //フォロー一覧を取得
-                launch(UI, parent = rootJob) {
-                    val follows = async { job.getFollow() }.await()
-                    val fragment = supportFragmentManager
-                            .findFragmentByTag(FragmentTag.PARTICIPANTS.name)
-                    if (fragment is ParticipantsFragment){
-                        fragment.setAdapter(follows)
-                    }
+                val follows = task.getFollow()
+                val fragment = supportFragmentManager
+                        .findFragmentByTag(FragmentTag.PARTICIPANTS.name)
+                if (fragment is ParticipantsFragment){
+                    fragment.setAdapter(follows)
                 }
+
             }
             return@setOnMenuItemClickListener true
         }

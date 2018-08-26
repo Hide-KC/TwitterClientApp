@@ -49,7 +49,7 @@ class TwitterOAuth(private val context: Context) {
             return
         }
 
-        launch(UI) {
+        val job = launch(UI) {
             val accessToken: AccessToken? = async {
                 try {
                     return@async twitter.getOAuthAccessToken(requestToken, "oauth_verifier")
