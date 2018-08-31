@@ -8,8 +8,9 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import twitter4j.IDs
 import twitter4j.TwitterException
+import twitter4j.User
 
-class TwitterLinkTask(private val context:Context, private val rootJob: Job?) {
+class TwitterTask(private val context:Context, private val rootJob: Job?) {
     interface UIUpdateListener{
         fun update(count: Int)
     }
@@ -18,8 +19,8 @@ class TwitterLinkTask(private val context:Context, private val rootJob: Job?) {
         rootJob?.cancel()
     }
 
-    fun getFollow(): List<UserDTO>{
-        val follows = mutableListOf<UserDTO>()
+    fun getFollow(): List<User>{
+        val follows = mutableListOf<User>()
         val twitter = TwitterUtils.getTwitter(context)
         var ids: IDs
         val idsList = mutableListOf<Long>()
@@ -59,8 +60,7 @@ class TwitterLinkTask(private val context:Context, private val rootJob: Job?) {
                     val userResponseList = async { twitter.lookupUsers(*mlist.toLongArray()) }.await()
                     for (user in userResponseList){
                         if (StringMatcher.getCircleSpace(user.name) != ""){
-                            val userDTO = UserDTO(user)
-                            follows.add(userDTO)
+                            follows.add(user)
                         }
                     }
 

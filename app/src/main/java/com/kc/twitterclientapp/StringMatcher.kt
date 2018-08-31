@@ -4,7 +4,7 @@ import java.text.Normalizer
 import java.util.regex.Pattern
 
 object StringMatcher {
-    private val EVENT_PATTERN = "技術書[典展]"
+    private val EVENT_PATTERN = "書[典展]"
     private val SPACE_PATTERN = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?([0-9０-９][0-9０-９])"
 
     fun getCircleSpace(name: String): String{

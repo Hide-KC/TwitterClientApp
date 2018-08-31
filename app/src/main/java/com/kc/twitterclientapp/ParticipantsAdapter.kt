@@ -11,8 +11,9 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import twitter4j.User
 
-class ParticipantsAdapter(context: Context): ArrayAdapter<UserDTO>(context, android.R.layout.simple_list_item_1) {
+class ParticipantsAdapter(context: Context): ArrayAdapter<User>(context, android.R.layout.simple_list_item_1) {
     private val inflater = LayoutInflater.from(context)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -23,10 +24,10 @@ class ParticipantsAdapter(context: Context): ArrayAdapter<UserDTO>(context, andr
         val item = getItem(position)
 
         holder.name.text = item.name
-        holder.screenName.text = item.screen_name
+        holder.screenName.text = item.screenName
         holder.circleSpace.text = StringMatcher.getCircleSpace(item.name)
         holder.icon.setOnClickListener{
-            val profileUrl = context.getString(R.string.profile_url) + item.screen_name
+            val profileUrl = context.getString(R.string.profile_url) + item.screenName
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(profileUrl))
             try {
                 it.context.startActivity(intent)
@@ -35,7 +36,7 @@ class ParticipantsAdapter(context: Context): ArrayAdapter<UserDTO>(context, andr
             }
         }
 
-        Glide.with(context).load(item.icon_url).into(holder.icon)
+        Glide.with(context).load(item.profileImageURL).into(holder.icon)
 
         return cv
     }

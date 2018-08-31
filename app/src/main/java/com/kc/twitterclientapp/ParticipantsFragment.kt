@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import twitter4j.User
 
 class ParticipantsFragment: Fragment() {
     private lateinit var participants: ListView
@@ -20,7 +21,7 @@ class ParticipantsFragment: Fragment() {
         return view
     }
 
-    fun setAdapter(users: List<UserDTO>){
+    fun setAdapter(users: List<User>){
         if (context != null){
             val adapter = if (participants.adapter != null){
                 (participants.adapter as ParticipantsAdapter).also { it.clear() }

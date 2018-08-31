@@ -6,11 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 
-class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterLinkTask.UIUpdateListener {
+class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterTask.UIUpdateListener {
     private enum class FragmentTag{
         PARTICIPANTS, PROGRESS
     }
@@ -54,7 +51,7 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
         toolbar.setOnMenuItemClickListener {
             val id = it.itemId
             if (id == R.id.update_follows){
-                val task = TwitterLinkTask(this, rootJob) //臭うコード
+                val task = TwitterTask(this, rootJob) //臭うコード
 
                 //キャンセル付きダイアログ表示
                 val dialog = ProgressDialogFragment.newInstance()

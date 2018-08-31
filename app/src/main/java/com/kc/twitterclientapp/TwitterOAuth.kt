@@ -49,16 +49,17 @@ class TwitterOAuth(private val context: Context) {
             return
         }
 
-        val job = launch(UI) {
-            val accessToken: AccessToken? = async {
+        launch(UI) {
+            val deferred = async {
                 try {
                     return@async twitter.getOAuthAccessToken(requestToken, "oauth_verifier")
                 } catch (e: TwitterException) {
                     e.printStackTrace()
                 }
                 return@async null
-            }.await()
+            }
 
+            val accessToken = deferred.await()
             if (accessToken != null) {
                 //認証成功。AccessTokenを保存して終了。
                 TwitterUtils.storeMyAccount(context, accessToken)
