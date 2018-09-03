@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
+import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_dialog.view.*
 
 class ProgressDialogFragment: DialogFragment() {
@@ -15,6 +16,7 @@ class ProgressDialogFragment: DialogFragment() {
     }
 
     private var cancellable: ICancel? = null
+    private lateinit var counter: TextView
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -27,31 +29,26 @@ class ProgressDialogFragment: DialogFragment() {
         val message = "実行中..."
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.fragment_dialog, null, false)
+        counter = view.counter
+        counter.text = "0"
         val builder = AlertDialog.Builder(context)
         builder.setView(view)
                 .setTitle(message)
                 .setNegativeButton("cancel") { dialogInterface: DialogInterface, i: Int ->
-                    dialogInterface.cancel()
+                    cancellable?.cancel()
+                    dialogInterface.dismiss()
                 }
 
         return builder.create()
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
-        super.onCancel(dialog)
-        cancellable?.cancel()
-    }
-
     fun setCount(count: Int){
-        view?.counter?.text = count.toString()
+        counter.text = count.toString()
     }
 
     companion object {
         fun newInstance(): ProgressDialogFragment{
-            val fragment = ProgressDialogFragment()
-            return fragment
+            return ProgressDialogFragment()
         }
     }
-
-
 }

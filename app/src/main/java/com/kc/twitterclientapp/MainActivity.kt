@@ -7,11 +7,11 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.Job
 
-class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterTask.UIUpdateListener {
+class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterTask.UpdateListener {
     private enum class FragmentTag{
         PARTICIPANTS, PROGRESS
     }
-    private var rootJob: Job? = null
+    private var task: TwitterTask? = null
 
     override fun update(count: Int) {
         val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.PROGRESS.name)
@@ -23,19 +23,24 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ConfirmOAuthActivity.REQUEST_CODE && resultCode == Activity.RESULT_CANCELED){
-            //CANCELEだった場合、終了
+            //CANCELだった場合、終了
             finish()
         }
+
     }
 
     override fun onResume() {
         super.onResume()
-        rootJob = Job()
+        task?.setRootJob()
     }
 
     override fun onPause() {
         super.onPause()
-        rootJob?.cancel()
+        task?.cancelAll()
+    }
+
+    override fun cancel(){
+        task?.cancelAll()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,20 +56,21 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
         toolbar.setOnMenuItemClickListener {
             val id = it.itemId
             if (id == R.id.update_follows){
-                val task = TwitterTask(this, rootJob) //臭うコード
+                task = TwitterTask(this) //臭うコード
 
                 //キャンセル付きダイアログ表示
                 val dialog = ProgressDialogFragment.newInstance()
                 dialog.show(supportFragmentManager, FragmentTag.PROGRESS.name)
 
                 //フォロー一覧を取得
-                val follows = task.getFollow()
-                val fragment = supportFragmentManager
-                        .findFragmentByTag(FragmentTag.PARTICIPANTS.name)
-                if (fragment is ParticipantsFragment){
-                    fragment.setAdapter(follows)
+                val participants = task?.getParticipants()
+                if (participants != null){
+                    val fragment = supportFragmentManager
+                            .findFragmentByTag(FragmentTag.PARTICIPANTS.name)
+                    if (fragment is ParticipantsFragment){
+                        fragment.setAdapter(participants)
+                    }
                 }
-
             }
             return@setOnMenuItemClickListener true
         }
@@ -73,9 +79,5 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.participant_frame, ParticipantsFragment.newInstance(null))
         transaction.commit()
-    }
-
-    override fun cancel(){
-        rootJob?.cancel()
     }
 }

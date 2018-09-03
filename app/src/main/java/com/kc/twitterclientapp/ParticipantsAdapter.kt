@@ -27,12 +27,12 @@ class ParticipantsAdapter(context: Context): ArrayAdapter<User>(context, android
         holder.screenName.text = item.screenName
         holder.circleSpace.text = StringMatcher.getCircleSpace(item.name)
         holder.icon.setOnClickListener{
-            val profileUrl = context.getString(R.string.profile_url) + item.screenName
+            val profileUrl = "twitter://user?screen_name=" + item.screenName
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(profileUrl))
             try {
                 it.context.startActivity(intent)
-            } catch (ex: ActivityNotFoundException){
-                ex.printStackTrace()
+            } catch (e: ActivityNotFoundException){
+                e.printStackTrace()
             }
         }
 

@@ -12,12 +12,8 @@ class ParticipantsFragment: Fragment() {
     private lateinit var participants: ListView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        //ViewのInflateなどなど
-        val args: Bundle? = arguments
         val view = inflater.inflate(R.layout.fragment_participants, container, false)
-
         participants = view.findViewById(R.id.participant_list)
-
         return view
     }
 
@@ -39,11 +35,6 @@ class ParticipantsFragment: Fragment() {
     companion object{
         fun newInstance(target: Fragment?): ParticipantsFragment{
             val fragment = ParticipantsFragment()
-            val args = Bundle()
-            fragment.arguments = args
-            if (target != null){
-                fragment.setTargetFragment(target, 0)
-            }
             return fragment
         }
     }

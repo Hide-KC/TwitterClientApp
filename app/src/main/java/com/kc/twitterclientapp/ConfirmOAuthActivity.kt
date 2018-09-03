@@ -22,7 +22,7 @@ class ConfirmOAuthActivity : AppCompatActivity() {
     //Webページでアプリを承認するとここに戻ってくる
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        oauth.oAuthApproval(this, intent)
+        oauth.oAuthApproval(intent)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
@@ -30,8 +30,7 @@ class ConfirmOAuthActivity : AppCompatActivity() {
     //戻るボタンでActivityを閉じた場合はRESULT_CANCELE
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent()
-        intent.putExtra("msg", "finish")
+        val intent = Intent().also { it.putExtra("msg", "finish") }
         setResult(Activity.RESULT_CANCELED, intent)
         finish()
     }

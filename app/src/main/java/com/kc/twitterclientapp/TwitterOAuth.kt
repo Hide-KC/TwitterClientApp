@@ -11,7 +11,6 @@ import kotlinx.coroutines.experimental.launch
 
 import twitter4j.Twitter
 import twitter4j.TwitterException
-import twitter4j.auth.AccessToken
 import twitter4j.auth.RequestToken
 
 class TwitterOAuth(private val context: Context) {
@@ -44,7 +43,7 @@ class TwitterOAuth(private val context: Context) {
     }
 
     //ConfirmOAuthActivity#onNewIntentからコール
-    fun oAuthApproval(context: Context, intent: Intent?){
+    fun oAuthApproval(intent: Intent?){
         if (intent == null || intent.data == null || !intent.data.toString().startsWith(callbackUrl)){
             return
         }
@@ -62,11 +61,11 @@ class TwitterOAuth(private val context: Context) {
             val accessToken = deferred.await()
             if (accessToken != null) {
                 //認証成功。AccessTokenを保存して終了。
-                TwitterUtils.storeMyAccount(context, accessToken)
-                Log.d("Comiketter", "認証成功！")
+                TwitterUtils.storeAccessToken(context, accessToken)
+                Log.d(javaClass.simpleName, "認証成功！")
                 Toast.makeText(context, context.getString(R.string.accesstoken_success), Toast.LENGTH_SHORT).show()
             } else {
-                Log.d("Comiketter", "認証失敗。")
+                Log.d(javaClass.simpleName, "認証失敗。")
                 Toast.makeText(context, context.getString(R.string.accesstoken_error), Toast.LENGTH_SHORT).show()
             }
         }

@@ -32,8 +32,8 @@ object TwitterUtils {
         return twitter
     }
 
-    fun storeMyAccount(context: Context, accessToken: AccessToken){
-        storeAccessToken(context, accessToken.token, accessToken.tokenSecret)
+    fun storeAccessToken(context: Context, accessToken: AccessToken){
+        store(context, accessToken.token, accessToken.tokenSecret)
     }
 
     fun loadAccessToken(context: Context): AccessToken?{
@@ -49,10 +49,10 @@ object TwitterUtils {
     }
 
     fun deleteAccessToken(context: Context){
-        storeAccessToken(context, null, null)
+        store(context, null, null)
     }
 
-    private fun storeAccessToken(context: Context, token: String?, tokenSecret: String?){
+    private fun store(context: Context, token: String?, tokenSecret: String?){
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = prefs.edit()
         editor.putString(KeyEnum.TOKEN.name, token)
