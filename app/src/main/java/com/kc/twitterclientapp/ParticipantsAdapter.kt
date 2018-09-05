@@ -24,7 +24,7 @@ class ParticipantsAdapter(context: Context): ArrayAdapter<User>(context, android
         val item = getItem(position)
 
         holder.name.text = item.name
-        holder.screenName.text = item.screenName
+        holder.screenName.text = "@" + item.screenName
         holder.circleSpace.text = StringMatcher.getCircleSpace(item.name)
         holder.icon.setOnClickListener{
             val profileUrl = "twitter://user?screen_name=" + item.screenName

@@ -1,6 +1,7 @@
 package com.kc.twitterclientapp
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.experimental.CancellationException
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
@@ -11,13 +12,26 @@ import twitter4j.TwitterException
 import twitter4j.User
 
 class TwitterTask(private val context:Context) {
-    interface UpdateListener{
+    interface TwitterTaskListener{
+        fun initAccounts(count: Int)
         fun update(count: Int)
+        fun complete(participants: List<User>?)
     }
 
     private var rootJob: Job? = null
+    private val listener: TwitterTaskListener?
+
+    init {
+        listener = if (context is TwitterTaskListener){
+            context
+        } else {
+            null
+        }
+    }
 
     fun cancelAll(){
+        Log.d(javaClass.simpleName, "cancel")
+        if (rootJob == null) Log.d(javaClass.simpleName, "rootJob is null!")
         rootJob?.cancel()
         rootJob = null
     }
@@ -26,7 +40,7 @@ class TwitterTask(private val context:Context) {
         rootJob = Job()
     }
 
-    fun getParticipants(): List<User>{
+    fun getParticipants(){
         val twitter = TwitterUtils.getTwitter(context)
         val idsList = mutableListOf<Long>()
         var cursor: Long = -1L
@@ -44,7 +58,42 @@ class TwitterTask(private val context:Context) {
 
                 if (idsList.size <= 0){
                     //取得IDsが0個だった場合return
+                    listener?.complete(null)
                     return@launch
+                } else {
+                    //参加者抽出
+                    listener?.initAccounts(idsList.size)
+
+                    val participants = mutableListOf<User>()
+                    try {
+                        //IDリストをぶん回しUserオブジェクトを取得
+                        val max = Math.ceil(idsList.size / 100.0).toInt()
+                        for (user_i: Int in 0 until max){
+                            val tmpList = if ((user_i + 1) * 100 > idsList.size){
+                                idsList.subList(user_i * 100, idsList.size)
+                            } else {
+                                idsList.subList(user_i * 100, (user_i + 1) * 100)
+                            }
+
+                            listener?.update(user_i * 100)
+
+                            val userResponseList = async { twitter.lookupUsers(*tmpList.toLongArray()) }.await()
+                            for (user in userResponseList){
+                                if (StringMatcher.getCircleSpace(user.name) != ""){
+                                    participants.add(user)
+                                }
+                            }
+                        }
+
+                        listener?.complete(participants)
+                    } catch (e: CancellationException){
+                        participants.clear()
+                        idsList.clear()
+                        return@launch
+                    } finally {
+                        participants.clear()
+                        idsList.clear()
+                    }
                 }
             } catch (e: CancellationException){
                 //cancel
@@ -54,52 +103,5 @@ class TwitterTask(private val context:Context) {
                 e.printStackTrace()
             }
         }
-        return extractParticipants(idsList)
-    }
-
-    private fun extractParticipants(idsList: List<Long>): List<User>{
-        val twitter = TwitterUtils.getTwitter(context)
-        val participants = mutableListOf<User>()
-
-        if (idsList.isEmpty()){
-            return participants
-        }
-
-        launch(UI, parent = rootJob) {
-            try {
-                //IDリストをぶん回しUserオブジェクトを取得
-                val max = Math.ceil(idsList.size / 100 * 1.0).toInt() + 1
-                val mlist = mutableListOf<Long>()
-                for (user_i: Int in 0 until max){
-                    var counter = 0
-                    mlist.clear()
-                    while (true){
-                        if (user_i * 100 + counter < idsList.size){
-                            mlist.add(idsList[user_i * 100 + counter])
-                        } else break
-
-                        counter++
-                        if (counter >= 100) break
-                    }
-
-                    val userResponseList = async { twitter.lookupUsers(*mlist.toLongArray()) }.await()
-                    for (user in userResponseList){
-                        if (StringMatcher.getCircleSpace(user.name) != ""){
-                            participants.add(user)
-                        }
-                    }
-
-                    if (context is UpdateListener){
-                        context.update(participants.size)
-                    }
-                }
-            } catch (e: CancellationException){
-                participants.clear()
-                return@launch
-            } catch (e: TwitterException){
-                e.printStackTrace()
-            }
-        }
-        return participants
     }
 }

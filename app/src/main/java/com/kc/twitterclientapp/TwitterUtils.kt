@@ -14,10 +14,9 @@ object TwitterUtils {
     }
 
     fun getTwitter(context: Context): Twitter {
-        val twitter = TwitterFactory.getSingleton()
+        val twitter = TwitterFactory().instance
 
         //ConsumerKeyとConsumerSecretを入力
-        Log.d(javaClass.simpleName, context.getString(R.string.consumer_key))
         twitter.setOAuthConsumer(context.getString(R.string.consumer_key), context.getString(R.string.consumer_secret))
 
         //AccessTokenを生成

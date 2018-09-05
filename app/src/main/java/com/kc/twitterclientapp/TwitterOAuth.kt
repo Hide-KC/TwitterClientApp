@@ -11,6 +11,7 @@ import kotlinx.coroutines.experimental.launch
 
 import twitter4j.Twitter
 import twitter4j.TwitterException
+import twitter4j.auth.AccessToken
 import twitter4j.auth.RequestToken
 
 class TwitterOAuth(private val context: Context) {
@@ -49,16 +50,16 @@ class TwitterOAuth(private val context: Context) {
         }
 
         launch(UI) {
-            val deferred = async {
+            val accessToken = async {
                 try {
-                    return@async twitter.getOAuthAccessToken(requestToken, "oauth_verifier")
+                    val verifier = intent.data.getQueryParameter("oauth_verifier")
+                    return@async twitter.getOAuthAccessToken(requestToken, verifier)
                 } catch (e: TwitterException) {
                     e.printStackTrace()
                 }
                 return@async null
-            }
+            }.await()
 
-            val accessToken = deferred.await()
             if (accessToken != null) {
                 //認証成功。AccessTokenを保存して終了。
                 TwitterUtils.storeAccessToken(context, accessToken)

@@ -32,6 +32,12 @@ class ParticipantsFragment: Fragment() {
         }
     }
 
+    fun clear(){
+        if (participants.adapter != null){
+            (participants.adapter as ParticipantsAdapter).clear()
+        }
+    }
+
     companion object{
         fun newInstance(target: Fragment?): ParticipantsFragment{
             val fragment = ParticipantsFragment()

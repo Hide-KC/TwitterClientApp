@@ -5,13 +5,33 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.experimental.Job
+import twitter4j.User
 
-class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterTask.UpdateListener {
+class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterTask.TwitterTaskListener {
+    override fun initAccounts(count: Int) {
+        val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.PROGRESS.name)
+        if (fragment is ProgressDialogFragment){
+            fragment.setInit(count)
+        }
+    }
+
+    override fun complete(participants: List<User>?) {
+        val fragment = supportFragmentManager
+                .findFragmentByTag(FragmentTag.PARTICIPANTS.name)
+        if (fragment is ParticipantsFragment && participants != null){
+            fragment.setAdapter(participants)
+        }
+
+        val dialog = supportFragmentManager.findFragmentByTag(FragmentTag.PROGRESS.name)
+        if (dialog is ProgressDialogFragment){
+            dialog.dismiss()
+        }
+    }
+
     private enum class FragmentTag{
         PARTICIPANTS, PROGRESS
     }
-    private var task: TwitterTask? = null
+    private lateinit var task: TwitterTask
 
     override fun update(count: Int) {
         val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.PROGRESS.name)
@@ -26,21 +46,20 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
             //CANCELだった場合、終了
             finish()
         }
-
     }
 
     override fun onResume() {
         super.onResume()
-        task?.setRootJob()
+        task.setRootJob()
     }
 
     override fun onPause() {
         super.onPause()
-        task?.cancelAll()
+        task.cancelAll()
     }
 
     override fun cancel(){
-        task?.cancelAll()
+        task.cancelAll()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,31 +72,30 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
         }
 
         toolbar.inflateMenu(R.menu.menu_main)
-        toolbar.setOnMenuItemClickListener {
+        toolbar.setOnMenuItemClickListener { it ->
             val id = it.itemId
             if (id == R.id.update_follows){
-                task = TwitterTask(this) //臭うコード
-
                 //キャンセル付きダイアログ表示
                 val dialog = ProgressDialogFragment.newInstance()
                 dialog.show(supportFragmentManager, FragmentTag.PROGRESS.name)
 
-                //フォロー一覧を取得
-                val participants = task?.getParticipants()
-                if (participants != null){
-                    val fragment = supportFragmentManager
-                            .findFragmentByTag(FragmentTag.PARTICIPANTS.name)
-                    if (fragment is ParticipantsFragment){
-                        fragment.setAdapter(participants)
-                    }
+                val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.PARTICIPANTS.name)
+                if (fragment != null){
+                    (fragment as ParticipantsFragment).clear()
                 }
+
+                //フォロー一覧を取得
+                //コールバックでアダプターにセット
+                task.getParticipants()
             }
             return@setOnMenuItemClickListener true
         }
 
         //参加者リストFragmentのセット
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.participant_frame, ParticipantsFragment.newInstance(null))
+        transaction.replace(R.id.participant_frame, ParticipantsFragment.newInstance(null), FragmentTag.PARTICIPANTS.name)
         transaction.commit()
+
+        task = TwitterTask(this)
     }
 }

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 
 class ConfirmOAuthActivity : AppCompatActivity() {
-    private val oauth: TwitterOAuth = TwitterOAuth(this)
+    private lateinit var oauth: TwitterOAuth
     companion object {
         val REQUEST_CODE = 1000
     }
@@ -16,6 +16,7 @@ class ConfirmOAuthActivity : AppCompatActivity() {
         setContentView(R.layout.activity_confirm_oauth)
 
         //即承認画面（Webページ）に飛ばす
+        oauth = TwitterOAuth(this)
         oauth.startAuthorize()
     }
 
