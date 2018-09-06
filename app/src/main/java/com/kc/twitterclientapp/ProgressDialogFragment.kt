@@ -23,7 +23,6 @@ class ProgressDialogFragment: DialogFragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is ICancel){
-
             cancellable = context
         }
     }

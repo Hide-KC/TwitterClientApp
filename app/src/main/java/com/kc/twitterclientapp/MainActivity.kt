@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import twitter4j.User
 
 class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterTask.TwitterTaskListener {
-    override fun initAccounts(count: Int) {
+    override fun setInitCount(count: Int) {
         val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.PROGRESS.name)
         if (fragment is ProgressDialogFragment){
             fragment.setInit(count)
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
 
     override fun onResume() {
         super.onResume()
-        task.setRootJob()
+        task.createRootJob()
     }
 
     override fun onPause() {
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
         }
 
         toolbar.inflateMenu(R.menu.menu_main)
+        toolbar.title = getString(R.string.app_name)
         toolbar.setOnMenuItemClickListener { it ->
             val id = it.itemId
             if (id == R.id.update_follows){
@@ -97,5 +98,6 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
         transaction.commit()
 
         task = TwitterTask(this)
+        task.createRootJob()
     }
 }
