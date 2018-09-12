@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:text="R"
+        android:text="Red"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/sb_plane"
         app:layout_constraintTop_toTopOf="@+id/sb_plane" />
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:text="G"
+        android:text="Green"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/r_value"
         app:layout_constraintStart_toEndOf="@+id/sb_plane"
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:text="B"
+        android:text="Blue"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/sb_plane"
         app:layout_constraintStart_toEndOf="@+id/sb_plane"/>

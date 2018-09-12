@@ -30,7 +30,7 @@ class ColorPickerDialogFragment : DialogFragment() {
                 it.setObserver(object : HSBView.IColorObserver {
                     override fun colorUpdate(hsb: HSBView.HSB) {
                         val color = Color.HSVToColor(floatArrayOf(hsb.hue, hsb.saturation, hsb.brightness))
-                        it.text = Color.red(color).toString()
+                        it.text = "Red " + Color.red(color).toString()
                     }
                 })
             }
@@ -38,7 +38,7 @@ class ColorPickerDialogFragment : DialogFragment() {
                 it.setObserver(object : HSBView.IColorObserver {
                     override fun colorUpdate(hsb: HSBView.HSB) {
                         val color = Color.HSVToColor(floatArrayOf(hsb.hue, hsb.saturation, hsb.brightness))
-                        it.text = Color.green(color).toString()
+                        it.text = "Green " + Color.green(color).toString()
                     }
                 })
             }
@@ -46,7 +46,7 @@ class ColorPickerDialogFragment : DialogFragment() {
                 it.setObserver(object : HSBView.IColorObserver{
                     override fun colorUpdate(hsb: HSBView.HSB) {
                         val color  = Color.HSVToColor(floatArrayOf(hsb.hue,hsb.saturation,hsb.brightness))
-                        it.text = Color.blue(color).toString()
+                        it.text = "Blue " + Color.blue(color).toString()
                     }
                 })
             }

@@ -15,6 +15,15 @@ class HueBar(context: Context, attrs: AttributeSet?) : SeekBar(context, attrs), 
             }
         }
 
+    var hue: Float = 0f
+        set(value){
+            field = when {
+                value < 0f -> 0f
+                value > 1f -> 1f
+                else -> value
+            }
+        }
+
     var saturation: Float = 0f
         set(value){
             field = when {
@@ -35,6 +44,9 @@ class HueBar(context: Context, attrs: AttributeSet?) : SeekBar(context, attrs), 
 
     override fun colorUpdate(hsb: HSBView.HSB) {
         progress = hsb.hue.toInt()
+        hue = hsb.hue
+        saturation = hsb.saturation
+        brightness = hsb.brightness
         postInvalidateOnAnimation()
     }
 
