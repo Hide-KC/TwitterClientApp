@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.kc.twitterclientapp.SBPlane
+        android:id="@+id/sb_plane"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.kc.twitterclientapp.HueBar
+        android:id="@+id/hue_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="24dp"
+        android:max="360"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/sb_plane"
+        app:layout_constraintStart_toStartOf="@+id/sb_plane"
+        app:layout_constraintTop_toBottomOf="@+id/sb_plane" />
+
+    <com.kc.twitterclientapp.ObservableTextView
+        android:id="@+id/r_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="R"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/sb_plane"
+        app:layout_constraintTop_toTopOf="@+id/sb_plane" />
+
+    <com.kc.twitterclientapp.ObservableTextView
+        android:id="@+id/g_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="G"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/r_value"
+        app:layout_constraintStart_toEndOf="@+id/sb_plane"
+        app:layout_constraintTop_toBottomOf="@+id/b_value" />
+
+    <com.kc.twitterclientapp.ObservableTextView
+        android:id="@+id/b_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="B"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sb_plane"
+        app:layout_constraintStart_toEndOf="@+id/sb_plane"/>
+</android.support.constraint.ConstraintLayout>

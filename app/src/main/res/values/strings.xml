@@ -3,4 +3,5 @@
     <string name="update">更新</string>
     <string name="accesstoken_success">認証成功</string>
     <string name="accesstoken_error">認証失敗</string>
+    <string name="colorpicker">カラーピッカー</string>
 </resources>

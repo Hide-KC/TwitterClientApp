@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SBPlane">
+        <attr name="sbplane_style" format="reference"/>
+        <attr name="alpha" format="float"/>
+        <attr name="hue" format="float"/>
+        <attr name="saturation" format="float"/>
+        <attr name="brightness" format="float"/>
+    </declare-styleable>
+</resources>
