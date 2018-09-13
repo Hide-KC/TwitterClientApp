@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.SeekBar
 
-class HueBar(context: Context, attrs: AttributeSet?) : SeekBar(context, attrs), HSBView.IColorObserver {
+class HueBar(context: Context, attrs: AttributeSet?) : SeekBar(context, attrs), IColorObserver {
 
     var mAlpha: Float = 0f
         set(value){
@@ -42,7 +42,7 @@ class HueBar(context: Context, attrs: AttributeSet?) : SeekBar(context, attrs), 
             }
         }
 
-    override fun colorUpdate(hsb: HSBView.HSB) {
+    override fun colorUpdate(hsb: HSB) {
         progress = hsb.hue.toInt()
         hue = hsb.hue
         saturation = hsb.saturation

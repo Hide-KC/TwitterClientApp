@@ -1,9 +1,12 @@
 package com.kc.twitterclientapp
 
-class ColorSubject: Subject<HSBView.IColorObserver, HSBView.HSB>() {
-    override fun notify(hsb: HSBView.HSB) {
+class ColorSubject: Subject<IColorObserver, HSB>() {
+    private var hsb = HSB(0f, 0f, 1f)
+
+    override fun notify(parameter: HSB) {
+        this.hsb = parameter
         for (observer in observers){
-            observer.colorUpdate(hsb)
+            observer.colorUpdate(this.hsb)
         }
     }
 }

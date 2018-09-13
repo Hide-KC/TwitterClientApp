@@ -19,7 +19,7 @@ class ColorPickerDialogFragment : DialogFragment() {
         }
     }
 
-    private val subject: Subject<HSBView.IColorObserver, HSBView.HSB> = ColorSubject()
+    private val subject: Subject<IColorObserver, HSB> = ColorSubject()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = activity?.layoutInflater
@@ -27,24 +27,24 @@ class ColorPickerDialogFragment : DialogFragment() {
             val view = inflater.inflate(R.layout.dialog_colorpicker, null, false)
             subject.attach(view.sb_plane)
             val rValue = view.r_value.also {
-                it.setObserver(object : HSBView.IColorObserver {
-                    override fun colorUpdate(hsb: HSBView.HSB) {
+                it.setObserver(object : IColorObserver {
+                    override fun colorUpdate(hsb: HSB) {
                         val color = Color.HSVToColor(floatArrayOf(hsb.hue, hsb.saturation, hsb.brightness))
                         it.text = "Red " + Color.red(color).toString()
                     }
                 })
             }
             val gValue = view.g_value.also {
-                it.setObserver(object : HSBView.IColorObserver {
-                    override fun colorUpdate(hsb: HSBView.HSB) {
+                it.setObserver(object : IColorObserver {
+                    override fun colorUpdate(hsb: HSB) {
                         val color = Color.HSVToColor(floatArrayOf(hsb.hue, hsb.saturation, hsb.brightness))
                         it.text = "Green " + Color.green(color).toString()
                     }
                 })
             }
             val bValue = view.b_value.also {
-                it.setObserver(object : HSBView.IColorObserver{
-                    override fun colorUpdate(hsb: HSBView.HSB) {
+                it.setObserver(object : IColorObserver{
+                    override fun colorUpdate(hsb: HSB) {
                         val color  = Color.HSVToColor(floatArrayOf(hsb.hue,hsb.saturation,hsb.brightness))
                         it.text = "Blue " + Color.blue(color).toString()
                     }
@@ -60,7 +60,7 @@ class ColorPickerDialogFragment : DialogFragment() {
                     override fun onStartTrackingTouch(seekBar: SeekBar?) { }
                     override fun onStopTrackingTouch(seekBar: SeekBar?) { }
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        subject.notify(HSBView.HSB(it.getFloatProgress(), it.saturation , it.brightness))
+                        subject.notify(HSB(it.getFloatProgress(), it.saturation , it.brightness))
                     }
                 })
             }
@@ -85,7 +85,7 @@ class ColorPickerDialogFragment : DialogFragment() {
         subject.detachAll()
     }
 
-    fun changed(hsb: HSBView.HSB) {
+    fun changed(hsb: HSB) {
         subject.notify(hsb)
     }
 }

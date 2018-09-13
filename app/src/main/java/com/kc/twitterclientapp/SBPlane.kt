@@ -12,10 +12,10 @@ import android.view.View
 import android.view.ViewParent
 import kotlin.math.roundToInt
 
-class SBPlane : HSBView, HSBView.IColorObserver {
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+class SBPlane : HSBView, IColorObserver {
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         //識別子のセット
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SBPlane, 0, 0)
         try {
@@ -79,10 +79,8 @@ class SBPlane : HSBView, HSBView.IColorObserver {
         }
 
         if (context is ColorChangeListener){
-            val hsb = HSB(hue, saturation, brightness)
             val listener = context as ColorChangeListener
-            listener.changed(hsb)
-            Log.d(javaClass.simpleName, hsb.toString())
+            listener.changed(HSB(hue, saturation, brightness))
         }
 
         return true

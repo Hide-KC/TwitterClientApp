@@ -6,20 +6,9 @@ import android.view.View
 import android.view.ViewParent
 
 abstract class HSBView : View {
-    interface IColorObserver{
-        //Subject#notifyからの受信用
-        fun colorUpdate(hsb: HSB)
-    }
-    interface ColorChangeListener{
-        //変更発報用
-        fun changed(hsb: HSB)
-    }
-
-    data class HSB(val hue: Float, val saturation: Float, val brightness: Float)
-
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     var mAlpha: Float = 0f
         set(value){
