@@ -12,11 +12,7 @@ abstract class HSBView : View {
 
     var mAlpha: Float = 0f
         set(value){
-            field = when {
-                value < 0f -> 0f
-                value > 1f -> 1f
-                else -> value
-            }
+            field = value.coerceIn(0f..1f)
         }
 
     var hue: Float = 0f
@@ -31,21 +27,13 @@ abstract class HSBView : View {
             field = degree
         }
 
-    var saturation: Float = 1f
+    var saturation: Float = 0f
         set(value){
-            field = when {
-                value < 0f -> 0f
-                value > 1f -> 1f
-                else -> value
-            }
+            field = value.coerceIn(0f..1f)
         }
 
     var brightness: Float = 1f
         set(value){
-            field = when {
-                value < 0f -> 0f
-                value > 1f -> 1f
-                else -> value
-            }
+            field = value.coerceIn(0f..1f)
         }
 }

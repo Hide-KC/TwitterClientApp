@@ -3,14 +3,8 @@ package com.kc.twitterclientapp;
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
-import android.view.View
-import android.view.ViewParent
-import kotlin.math.roundToInt
 
 class SBPlane : HSBView, IColorObserver {
     constructor(context: Context) : this(context, null)
@@ -22,7 +16,7 @@ class SBPlane : HSBView, IColorObserver {
             //xmlで静的にセットされている値の取出し
             mAlpha = typedArray.getFloat(R.styleable.SBPlane_alpha, 0f)
             hue = typedArray.getFloat(R.styleable.SBPlane_hue, 0f)
-            saturation = typedArray.getFloat(R.styleable.SBPlane_saturation, 1f)
+            saturation = typedArray.getFloat(R.styleable.SBPlane_saturation, 0f)
             brightness = typedArray.getFloat(R.styleable.SBPlane_brightness, 1f)
         } finally {
             typedArray.recycle()
@@ -54,7 +48,7 @@ class SBPlane : HSBView, IColorObserver {
             val endColor = Color.HSVToColor(floatArrayOf(hue, x_i / 100f, 0f))
 
             //ここでの座標系の数値入力は意味が無さそう
-            lg = LinearGradient(x_i*unit , 0f, x_i*unit , viewSize.height*1f , startColor, endColor, Shader.TileMode.CLAMP)
+            lg = LinearGradient(0f, 0f, 0f , 0f, startColor, endColor, Shader.TileMode.CLAMP)
             paint.shader = lg
             canvas?.drawLine(x_i*unit, 0f, x_i*unit, viewSize.height*1f, paint)
         }
@@ -65,12 +59,7 @@ class SBPlane : HSBView, IColorObserver {
         if (event != null && (action == MotionEvent.ACTION_MOVE || action == MotionEvent.ACTION_DOWN)){
             val x = event.x / measuredWidth.toFloat()
             val y = event.y / measuredHeight.toFloat()
-            saturation = when {
-                x < 0f -> 0f
-                x > 1f -> 1f
-                else -> x
-            }
-
+            saturation = x.coerceIn(0f..1f)
             brightness = when {
                 y < 0f -> 1f
                 y > 1f -> 0f
@@ -80,17 +69,18 @@ class SBPlane : HSBView, IColorObserver {
 
         if (context is ColorChangeListener){
             val listener = context as ColorChangeListener
-            listener.changed(HSB(hue, saturation, brightness))
+            listener.changed(AHSB(mAlpha, hue, saturation, brightness))
         }
 
         return true
     }
 
-    override fun colorUpdate(hsb: HSB) {
+    override fun colorUpdate(ahsb: AHSB) {
         //HSBをセットして再描画
-        hue = hsb.hue
-        saturation = hsb.saturation
-        brightness = hsb.brightness
+        mAlpha = ahsb.mAlpha
+        hue = ahsb.hue
+        saturation = ahsb.saturation
+        brightness = ahsb.brightness
         postInvalidateOnAnimation()
     }
 

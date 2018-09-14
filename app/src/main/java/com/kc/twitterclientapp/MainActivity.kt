@@ -8,10 +8,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import twitter4j.User
 
 class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, TwitterTask.TwitterTaskListener, ColorChangeListener {
-    override fun changed(hsb: HSB) {
+    override fun changed(ahsb: AHSB) {
         val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.COLOR_PICKER.name)
         if (fragment is ColorPickerDialogFragment){
-            fragment.changed(hsb)
+            fragment.changed(ahsb)
         }
     }
 

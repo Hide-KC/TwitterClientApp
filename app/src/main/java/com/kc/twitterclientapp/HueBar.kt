@@ -1,52 +1,46 @@
 package com.kc.twitterclientapp
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.SeekBar
 
-class HueBar(context: Context, attrs: AttributeSet?) : SeekBar(context, attrs), IColorObserver {
-
+class HueBar(context: Context, attrs: AttributeSet) : SeekBar(context, attrs), IColorObserver {
     var mAlpha: Float = 0f
-        set(value){
-            field = when {
-                value < 0f -> 0f
-                value > 1f -> 1f
-                else -> value
-            }
-        }
+        set(value){ field = value.coerceIn(0f..1f) }
 
     var hue: Float = 0f
         set(value){
-            field = when {
-                value < 0f -> 0f
-                value > 1f -> 1f
-                else -> value
+            var degree = value
+            if (degree > 360 || degree < 0){
+                //360度以内に格納
+                degree %= 360
+                degree += 360
+                degree %= 360
             }
+            field = degree
         }
 
     var saturation: Float = 0f
-        set(value){
-            field = when {
-                value < 0f -> 0f
-                value > 1f -> 1f
-                else -> value
-            }
-        }
+        set(value){ field = value.coerceIn(0f..1f) }
 
     var brightness: Float = 1f
-        set(value){
-            field = when {
-                value < 0f -> 0f
-                value > 1f -> 1f
-                else -> value
-            }
-        }
+        set(value){ field = value.coerceIn(0f..1f) }
 
-    override fun colorUpdate(hsb: HSB) {
-        progress = hsb.hue.toInt()
-        hue = hsb.hue
-        saturation = hsb.saturation
-        brightness = hsb.brightness
+    fun progressChanged(){
+        val ahsb = AHSB(mAlpha, hue, saturation, brightness)
+        if (context is ColorChangeListener){
+            val listener = context as ColorChangeListener
+            listener.changed(ahsb)
+        }
+    }
+
+    override fun colorUpdate(ahsb: AHSB) {
+        mAlpha = ahsb.mAlpha
+        progress = ahsb.hue.toInt()
+        hue = ahsb.hue
+        saturation = ahsb.saturation
+        brightness = ahsb.brightness
         postInvalidateOnAnimation()
     }
 

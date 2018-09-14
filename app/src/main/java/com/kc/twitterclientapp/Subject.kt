@@ -2,9 +2,14 @@ package com.kc.twitterclientapp
 
 abstract class Subject<T, E> {
     protected val observers = mutableListOf<T>()
+    abstract fun notify(parameter: E)
 
     fun attach(observer: T){
         observers.add(observer)
+    }
+
+    fun detachAll(){
+        observers.clear()
     }
 
     fun detach(observer: T): Boolean{
@@ -17,12 +22,6 @@ abstract class Subject<T, E> {
         }
         return false
     }
-
-    fun detachAll(){
-        observers.clear()
-    }
-
-    abstract fun notify(parameter: E)
 
     private var state: States = States.WAIT
     enum class States{
