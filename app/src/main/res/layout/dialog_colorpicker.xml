@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.kc.twitterclientapp.SBPlane
+    <colorpicker.SBPlane
         android:id="@+id/sb_plane"
         android:layout_width="180dp"
         android:layout_height="180dp"
@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.kc.twitterclientapp.HueBar
+    <colorpicker.HueBar
         android:id="@+id/hue_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         app:layout_constraintStart_toStartOf="@+id/sb_plane"
         app:layout_constraintTop_toBottomOf="@+id/sb_plane" />
 
-    <com.kc.twitterclientapp.ObservableTextView
+    <colorpicker.ObservableTextView
         android:id="@+id/r_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         app:layout_constraintStart_toEndOf="@+id/sb_plane"
         app:layout_constraintTop_toTopOf="@+id/sb_plane" />
 
-    <com.kc.twitterclientapp.ObservableTextView
+    <colorpicker.ObservableTextView
         android:id="@+id/g_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         app:layout_constraintStart_toEndOf="@+id/sb_plane"
         app:layout_constraintTop_toBottomOf="@+id/b_value" />
 
-    <com.kc.twitterclientapp.ObservableTextView
+    <colorpicker.ObservableTextView
         android:id="@+id/b_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

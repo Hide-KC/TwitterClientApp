@@ -1,4 +1,4 @@
-package com.kc.twitterclientapp
+package colorpicker
 
 import android.content.Context
 import android.util.AttributeSet

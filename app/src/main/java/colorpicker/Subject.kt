@@ -1,4 +1,4 @@
-package com.kc.twitterclientapp
+package colorpicker
 
 abstract class Subject<T, E> {
     protected val observers = mutableListOf<T>()
@@ -28,7 +28,7 @@ abstract class Subject<T, E> {
         WAIT, RUNNING, ERROR
     }
 
-    protected fun getState(): States{
+    protected fun getState(): States {
         return state
     }
 

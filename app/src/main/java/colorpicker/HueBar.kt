@@ -1,7 +1,6 @@
-package com.kc.twitterclientapp
+package colorpicker
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.SeekBar
 

@@ -1,9 +1,8 @@
-package com.kc.twitterclientapp
+package colorpicker
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewParent
 
 abstract class HSBView : View {
     constructor(context: Context) : this(context, null)

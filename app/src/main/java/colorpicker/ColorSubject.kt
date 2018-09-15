@@ -1,4 +1,4 @@
-package com.kc.twitterclientapp
+package colorpicker
 
 class ColorSubject: Subject<IColorObserver, AHSB>() {
     private var ahsb = AHSB()

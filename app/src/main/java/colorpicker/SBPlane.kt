@@ -1,10 +1,11 @@
-package com.kc.twitterclientapp;
+package colorpicker
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
+import com.kc.twitterclientapp.R
 
 class SBPlane : HSBView, IColorObserver {
     constructor(context: Context) : this(context, null)
@@ -23,7 +24,7 @@ class SBPlane : HSBView, IColorObserver {
         }
     }
 
-    private val viewSize: Square = Square(0,0)
+    private val viewSize: Square = Square(0, 0)
     private lateinit var paint: Paint
     private lateinit var lg: LinearGradient
 
@@ -48,7 +49,7 @@ class SBPlane : HSBView, IColorObserver {
             val endColor = Color.HSVToColor(floatArrayOf(hue, x_i / 100f, 0f))
 
             //ここでの座標系の数値入力は意味が無さそう
-            lg = LinearGradient(0f, 0f, 0f , 0f, startColor, endColor, Shader.TileMode.CLAMP)
+            lg = LinearGradient(x_i*unit , 0f, x_i*unit , viewSize.height*1f, startColor, endColor, Shader.TileMode.CLAMP)
             paint.shader = lg
             canvas?.drawLine(x_i*unit, 0f, x_i*unit, viewSize.height*1f, paint)
         }

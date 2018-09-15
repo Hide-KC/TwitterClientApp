@@ -1,4 +1,4 @@
-package com.kc.twitterclientapp
+package colorpicker
 
 data class AHSB(val mAlpha: Float = 0f,
                 val hue: Float = 0f,
