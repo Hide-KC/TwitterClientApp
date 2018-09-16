@@ -43,7 +43,7 @@ class HueBar(context: Context, attrs: AttributeSet) : SeekBar(context, attrs), I
         postInvalidateOnAnimation()
     }
 
-    fun getFloatProgress(): Float {
+    fun getProgressAsFloat(): Float {
         return super.getProgress() * 1f
     }
 }

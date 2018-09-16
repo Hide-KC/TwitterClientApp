@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
     private enum class FragmentTag{
         PARTICIPANTS, PROGRESS, COLOR_PICKER
     }
-    private lateinit var task: TwitterTask
+    private var task: TwitterTask? = null
 
     override fun update(count: Int) {
         val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.PROGRESS.name)
@@ -60,16 +60,16 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
 
     override fun onResume() {
         super.onResume()
-        task.createRootJob()
+        task?.createRootJob()
     }
 
     override fun onPause() {
         super.onPause()
-        task.cancelAll()
+        task?.cancelAll()
     }
 
     override fun cancel(){
-        task.cancelAll()
+        task?.cancelAll()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,28 +98,13 @@ class MainActivity : AppCompatActivity(), ProgressDialogFragment.ICancel, Twitte
 
                     //フォロー一覧を取得
                     //コールバックでアダプターにセット
-                    task.getParticipants()
+                    task?.getParticipants()
                 }
                 R.id.show_colorpicker -> {
                     //カラーピッカーダイアログの表示
                     val dialog = ColorPickerDialogFragment.newInstance(null)
                     dialog.show(supportFragmentManager, FragmentTag.COLOR_PICKER.name)
                 }
-            }
-
-            if (id == R.id.update_follows){
-                //キャンセル付きダイアログ表示
-                val dialog = ProgressDialogFragment.newInstance()
-                dialog.show(supportFragmentManager, FragmentTag.PROGRESS.name)
-
-                val fragment = supportFragmentManager.findFragmentByTag(FragmentTag.PARTICIPANTS.name)
-                if (fragment != null){
-                    (fragment as ParticipantsFragment).clear()
-                }
-
-                //フォロー一覧を取得
-                //コールバックでアダプターにセット
-                task.getParticipants()
             }
             return@setOnMenuItemClickListener true
         }

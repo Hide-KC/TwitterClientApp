@@ -50,6 +50,11 @@ class ProgressDialogFragment: DialogFragment() {
         dialog?.dismiss()
     }
 
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        cancellable = null
+    }
+
     fun setCount(count: Int){
         counter.text = count.toString()
     }

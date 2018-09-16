@@ -61,7 +61,7 @@ class ColorPickerDialogFragment : DialogFragment() {
                     override fun onStartTrackingTouch(seekBar: SeekBar?) { }
                     override fun onStopTrackingTouch(seekBar: SeekBar?) { }
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                        it.hue = it.getFloatProgress()
+                        it.hue = it.getProgressAsFloat()
                         it.progressChanged()
                     }
                 })
